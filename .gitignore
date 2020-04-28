@@ -1,0 +1,26 @@
+# Python cache files
+.cache
+__pycache__
+
+# Student lists
+*.xlsx
+*.xls
+*.json
+
+# Directory structure
+!/results/
+/results/**
+!/results/T3/
+
+!/files/
+/files/**
+!/files/
+!/files/2020-01/
+!/files/2020-01/IWI-131/
+!/files/2020-01/IWI-131/CSJ/
+!/files/2020-01/IWI-131/CSJ/Students/
+!/files/2020-01/IWI-131/CSJ/Students/xls/
+!/files/2020-01/IWI-131/CSJ/Homeworks/
+!/files/2020-01/IWI-131/CSJ/Homeworks/T3/
+
+!*.gitkeep
