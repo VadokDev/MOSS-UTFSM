@@ -4,7 +4,7 @@
 
 ## :mag_right: Requeriments
 
-* Python 3.8 or latest
+* Python 3 or latest
 * Pyenv - [https://github.com/pypa/pipenv](https://github.com/pypa/pipenv)
 * MOSS User ID - [Registering for Moss](https://theory.stanford.edu/~aiken/moss/)
 
