@@ -28,32 +28,32 @@ fileList = [f for f in listdir(PATH_INPUT_FILES) if path.isfile(path.join(PATH_I
 print("Creating JSON files for student sections")
 
 for fileName in fileList:
-	if fileName == ".gitkeep":
+    if fileName == ".gitkeep":
         continue
         
     result = {}
-	section = fileName.split('_')[2]
-	file = open(path.join(PATH_OUTPUT_FILES, section + ".json"), 'w')
+    section = fileName.split('_')[2]
+    file = open(path.join(PATH_OUTPUT_FILES, section + ".json"), 'w')
 
-	print("Loading student's data from the section:", section)
-	for id, rol, dv, rut, _, app, apm, nombre, _, carrera, email in ar.loadFile(path.join(PATH_INPUT_FILES, fileName), ar.START_INDEX_PARALELO):
-		nombreFinal = nombre.split()[0]+" "+app+" "+apm
-		
-		if dv == 'K' or dv == 'k':
-			dv = "11"
-			
-		if dv != dv or email != email or rol != rol:
-			continue
+    print("Loading student's data from the section:", section)
+    for id, rol, dv, rut, _, app, apm, nombre, _, carrera, email in ar.loadFile(path.join(PATH_INPUT_FILES, fileName), ar.START_INDEX_PARALELO):
+        nombreFinal = nombre.split()[0]+" "+app+" "+apm
+        
+        if dv == 'K' or dv == 'k':
+            dv = "11"
+        	
+        if dv != dv or email != email or rol != rol:
+            continue
 
-		result[rut] = {
-			'rol' : rol,
-			'nombre': nombreFinal.title(),
-			'email' : email,
-			'carrera' : carrera
-		}
+        result[rut] = {
+            'rol' : rol,
+            'nombre': nombreFinal.title(),
+            'email' : email,
+            'carrera' : carrera
+        }
 
-	json.dump(result, fp=file, ensure_ascii=False)
-	file.close()
+    json.dump(result, fp=file, ensure_ascii=False)
+    file.close()
 
 print("Uploading homeworks to MOSS")
 
