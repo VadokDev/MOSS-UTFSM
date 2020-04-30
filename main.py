@@ -4,12 +4,15 @@ import sys
 import json
 import pathlib
 import mosspy
+import locale
 
 from alumnosreader import AlumnosReader as ar
 from datetime import datetime as dt
 from os import listdir, path
 from bs4 import BeautifulSoup
 from xlwt import Workbook 
+
+locale.setlocale(locale.LC_ALL, 'en_US.utf-8')
 
 # This is technically the best way to do it...
 # See https://stackoverflow.com/questions/3411771/best-way-to-replace-multiple-characters-in-a-string
