@@ -3,16 +3,13 @@
 import sys
 import json
 import pathlib
-import mosspy
-import locale
 
+from moss import Moss
 from alumnosreader import AlumnosReader as ar
 from datetime import datetime as dt
 from os import listdir, path
 from bs4 import BeautifulSoup
 from xlwt import Workbook 
-
-locale.setlocale(locale.LC_ALL, 'en_US.utf-8')
 
 # This is technically the best way to do it...
 # See https://stackoverflow.com/questions/3411771/best-way-to-replace-multiple-characters-in-a-string
@@ -60,7 +57,7 @@ for fileName in fileList:
 
 print("Uploading homeworks to MOSS")
 
-m = mosspy.Moss(userId, "python")
+m = Moss(userId, "python")
 m.addFilesByWildcard(PATH_HOMEWORK_FILES + "/*/*.py")
 url = m.send() 
 print ("Downloading report URL: " + url)
