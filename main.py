@@ -28,7 +28,10 @@ fileList = [f for f in listdir(PATH_INPUT_FILES) if path.isfile(path.join(PATH_I
 print("Creating JSON files for student sections")
 
 for fileName in fileList:
-	result = {}
+	if fileName == ".gitkeep":
+        continue
+        
+    result = {}
 	section = fileName.split('_')[2]
 	file = open(path.join(PATH_OUTPUT_FILES, section + ".json"), 'w')
 
