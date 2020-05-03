@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
- 
+
 import sys
 import json
 import pathlib
@@ -9,47 +9,56 @@ from alumnosreader import AlumnosReader as ar
 from datetime import datetime as dt
 from os import listdir, path
 from bs4 import BeautifulSoup
-from xlwt import Workbook 
+from xlwt import Workbook
 
 # This is technically the best way to do it...
 # See https://stackoverflow.com/questions/3411771/best-way-to-replace-multiple-characters-in-a-string
+
+
 def sanitize(word):
-	return word.lower().replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u")
+    return word.lower().replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u")
+
 
 userId = int(sys.argv[1])
 similarityPercent = int(sys.argv[6])
-PATH_INPUT_FILES = path.join(".", "files", sys.argv[2], sys.argv[3], sys.argv[4], "Students", "xls")
-PATH_OUTPUT_FILES = path.join(".", "files", sys.argv[2], sys.argv[3], sys.argv[4], "Students", "json")
-PATH_HOMEWORK_FILES = path.join(".", "files", sys.argv[2], sys.argv[3], sys.argv[4], "Homeworks", sys.argv[5])
+PATH_INPUT_FILES = path.join(
+    ".", "files", sys.argv[2], sys.argv[3], sys.argv[4], "Students", "xls")
+PATH_OUTPUT_FILES = path.join(
+    ".", "files", sys.argv[2], sys.argv[3], sys.argv[4], "Students", "json")
+PATH_HOMEWORK_FILES = path.join(
+    ".", "files", sys.argv[2], sys.argv[3], sys.argv[4], "Homeworks", sys.argv[5])
 pathlib.Path(PATH_OUTPUT_FILES).mkdir(parents=True, exist_ok=True)
-pathlib.Path(path.join("results", sys.argv[5])).mkdir(parents=True, exist_ok=True)
-fileList = [f for f in listdir(PATH_INPUT_FILES) if path.isfile(path.join(PATH_INPUT_FILES, f))]
+pathlib.Path(path.join("results", sys.argv[5])).mkdir(
+    parents=True, exist_ok=True)
+fileList = [f for f in listdir(PATH_INPUT_FILES) if path.isfile(
+    path.join(PATH_INPUT_FILES, f))]
 
 print("Creating JSON files for student sections")
 
 for fileName in fileList:
-    if fileName == ".gitkeep":
+    if fileName.startswith("."):
         continue
-        
+
     result = {}
+    print(fileName)
     section = fileName.split('_')[2]
     file = open(path.join(PATH_OUTPUT_FILES, section + ".json"), 'w')
 
     print("Loading student's data from the section:", section)
     for id, rol, dv, rut, _, app, apm, nombre, _, carrera, email in ar.loadFile(path.join(PATH_INPUT_FILES, fileName), ar.START_INDEX_PARALELO):
         nombreFinal = nombre.split()[0]+" "+app+" "+apm
-        
+
         if dv == 'K' or dv == 'k':
             dv = "11"
-        	
+
         if dv != dv or email != email or rol != rol:
             continue
 
         result[rut] = {
-            'rol' : rol,
+            'rol': rol,
             'nombre': nombreFinal.title(),
-            'email' : email,
-            'carrera' : carrera
+            'email': email,
+            'carrera': carrera
         }
 
     json.dump(result, fp=file, ensure_ascii=False)
@@ -58,37 +67,38 @@ for fileName in fileList:
 print("Uploading homeworks to MOSS")
 
 m = Moss(userId, "python")
-m.addFilesByWildcard(PATH_HOMEWORK_FILES + "/*/*.py")
-url = m.send() 
-print ("Downloading report URL: " + url)
+m.addFilesByWildcard(PATH_HOMEWORK_FILES + "/*/*")
+url = m.send()
+print("Downloading report URL: " + url)
 m.saveWebPage(url, PATH_HOMEWORK_FILES + "/report.html")
 
 json_text_list = {}
 for file in listdir(PATH_OUTPUT_FILES):
-	with open(path.join(PATH_OUTPUT_FILES, file)) as json_file:
-		json_text_list[file.split(".")[0]] = json.load(json_file)
+    with open(path.join(PATH_OUTPUT_FILES, file)) as json_file:
+        json_text_list[file.split(".")[0]] = json.load(json_file)
 
-mossReport = BeautifulSoup(open(path.join(PATH_HOMEWORK_FILES, "report.html")), features="lxml")
+mossReport = BeautifulSoup(
+    open(path.join(PATH_HOMEWORK_FILES, "report.html")), features="lxml")
 table = mossReport.find_all('table')[0]
 
-wb = Workbook() 
-excelFile = wb.add_sheet(sys.argv[4]) 
+wb = Workbook()
+excelFile = wb.add_sheet(sys.argv[4])
 
-excelFile.write(0, 0, 'Nombres') 
-excelFile.write(0, 1, 'Apellidos') 
-excelFile.write(0, 2, 'ROL') 
-excelFile.write(0, 3, 'RUT') 
-excelFile.write(0, 4, 'Paralelo') 
-excelFile.write(0, 5, '% de Copia') 
-excelFile.write(0, 6, ' - ') 
-excelFile.write(0, 7, 'Nombres') 
-excelFile.write(0, 8, 'Apellidos') 
-excelFile.write(0, 9, 'ROL') 
-excelFile.write(0, 10, 'RUT') 
-excelFile.write(0, 11, 'Paralelo') 
-excelFile.write(0, 12, '% de Copia') 
-excelFile.write(0, 13, 'Líneas Similares') 
-excelFile.write(0, 14, 'URL') 
+excelFile.write(0, 0, 'Nombres')
+excelFile.write(0, 1, 'Apellidos')
+excelFile.write(0, 2, 'ROL')
+excelFile.write(0, 3, 'RUT')
+excelFile.write(0, 4, 'Paralelo')
+excelFile.write(0, 5, '% de Copia')
+excelFile.write(0, 6, ' - ')
+excelFile.write(0, 7, 'Nombres')
+excelFile.write(0, 8, 'Apellidos')
+excelFile.write(0, 9, 'ROL')
+excelFile.write(0, 10, 'RUT')
+excelFile.write(0, 11, 'Paralelo')
+excelFile.write(0, 12, '% de Copia')
+excelFile.write(0, 13, 'Líneas Similares')
+excelFile.write(0, 14, 'URL')
 
 linea = 1
 
@@ -134,7 +144,6 @@ for row in table.find_all("tr")[1:]:
                     rol2 = a[1]["rol"]
                     rut2 = a[0]
 
-
         if nombre1 == "":
             nombre1 = ["Student", "not found", "", ""]
         if nombre2 == "":
@@ -160,4 +169,5 @@ for row in table.find_all("tr")[1:]:
 
         #print(nombre1 + "\t" + str(paralelo1) + "\t" + nombre2 + "\t" + str(paralelo2) + "\t" + str(p1)+"%"+ "\t" + str(p2)+"%" + "\t" + cells[2].text)
 
-wb.save(path.join("results", sys.argv[5], sys.argv[5] + " - " + dt.now().strftime("%Y-%M-%d %H%M%S") + ".xls")) 
+wb.save(path.join("results", sys.argv[5], sys.argv[5] +
+                  " - " + dt.now().strftime("%Y-%M-%d %H%M%S") + ".xls"))
