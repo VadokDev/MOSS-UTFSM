@@ -40,7 +40,6 @@ for fileName in fileList:
         continue
 
     result = {}
-    print(fileName)
     section = fileName.split('_')[2]
     file = open(path.join(PATH_OUTPUT_FILES, section + ".json"), 'w')
 
