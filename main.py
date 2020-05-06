@@ -84,7 +84,8 @@ m.saveWebPage(url, PATH_HOMEWORK_FILES + "/report.html")
 json_text_list = {}
 for file in listdir(PATH_OUTPUT_FILES):
     with open(path.join(PATH_OUTPUT_FILES, file)) as json_file:
-        json_text_list[file.split(".")[0]] = json.load(json_file)
+        if file.endswith('.json'):
+            json_text_list[file.split(".")[0]] = json.load(json_file)
 
 mossReport = BeautifulSoup(
     open(path.join(PATH_HOMEWORK_FILES, "report.html")), features="lxml")
