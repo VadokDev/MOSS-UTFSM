@@ -7,9 +7,10 @@ import pathlib
 from moss import Moss
 from alumnosreader import AlumnosReader as ar
 from datetime import datetime as dt
-from os import listdir, path
+from os import listdir, path, walk
 from bs4 import BeautifulSoup
 from xlwt import Workbook
+from zipfile import ZipFile
 
 # This is technically the best way to do it...
 # See https://stackoverflow.com/questions/3411771/best-way-to-replace-multiple-characters-in-a-string
@@ -63,6 +64,14 @@ for fileName in fileList:
     json.dump(result, fp=file, ensure_ascii=False)
     file.close()
 
+print("Extracting all zip files")
+
+for root, dirs, files in walk(PATH_HOMEWORK_FILES):
+    for file in files:
+        if file.endswith(".zip"):
+          with ZipFile(path.join(root, file), 'r') as zipObj:
+             zipObj.extractall(path=root)
+
 print("Uploading homeworks to MOSS")
 
 m = Moss(userId, "python")
@@ -74,7 +83,8 @@ m.saveWebPage(url, PATH_HOMEWORK_FILES + "/report.html")
 json_text_list = {}
 for file in listdir(PATH_OUTPUT_FILES):
     with open(path.join(PATH_OUTPUT_FILES, file)) as json_file:
-        json_text_list[file.split(".")[0]] = json.load(json_file)
+        if file.endswith('.json'):
+            json_text_list[file.split(".")[0]] = json.load(json_file)
 
 mossReport = BeautifulSoup(
     open(path.join(PATH_HOMEWORK_FILES, "report.html")), features="lxml")
