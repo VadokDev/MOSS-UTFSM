@@ -69,8 +69,8 @@ print("Extracting all zip files")
 for root, dirs, files in walk(PATH_HOMEWORK_FILES):
     for file in files:
         if file.endswith(".zip"):
-          with ZipFile(path.join(root, file), 'r') as zipObj:
-             zipObj.extractall(path=root)
+            with ZipFile(path.join(root, file), 'r') as zipObj:
+                zipObj.extractall(path=root)
 
 print("Uploading homeworks to MOSS")
 
@@ -124,7 +124,7 @@ for row in table.find_all("tr")[1:]:
     p1 = int(f1[1].split("%")[0].split("(")[-1])
     p2 = int(f2[1].split("%")[0].split("(")[-1])
 
-    if p1 >= similarityPercent and p2 >= similarityPercent:
+    if p1 >= similarityPercent or p2 >= similarityPercent:
 
         n1 = name1
         n2 = name2
@@ -179,4 +179,4 @@ for row in table.find_all("tr")[1:]:
         #print(nombre1 + "\t" + str(paralelo1) + "\t" + nombre2 + "\t" + str(paralelo2) + "\t" + str(p1)+"%"+ "\t" + str(p2)+"%" + "\t" + cells[2].text)
 
 wb.save(path.join("results", sys.argv[5], sys.argv[5] +
-                  " - " + dt.now().strftime("%Y-%M-%d %H%M%S") + ".xls"))
+                  " - " + dt.now().strftime("%Y-%m-%d %H%M%S") + ".xls"))
