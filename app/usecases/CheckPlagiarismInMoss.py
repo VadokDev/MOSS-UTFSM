@@ -37,13 +37,11 @@ class CheckPlagiarismInMoss:
                 plagio["student2"], students
             )
 
-            if not student1 or not student2:
-                print("not found:", plagio)
-                continue
-
             section = "inter"
             if student1["section"] == student2["section"]:
                 section = student1["section"]
+            elif student1["section"] == "not found" or student2["section"] == "not found":
+                section = "not found"
 
             if section not in results:
                 results[section] = []

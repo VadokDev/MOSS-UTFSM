@@ -61,7 +61,19 @@ class StudentService:
                     matchs += 1
             if matchs >= 3:
                 return student
-        return False
+        return self.getNotFoundStudent(name)
+
+    def getNotFoundStudent(self, name):
+        return {
+            "rol": "-",
+            "name": name,
+            "names": name.upper(),
+            "lastnames": "-",
+            "rut": "-",
+            "career": "-",
+            "email": "-",
+            "section": "not found",
+        }
 
     def mapResultToReport(self, result):
         res = [
