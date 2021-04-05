@@ -228,7 +228,7 @@ class MossService:
             thread.join()
 
     def parseReportStudent(self, text):
-        name = text.split("/")[-2].split("_")[:-5]
+        name = text.split("/")[3].split("_")[:-5]
         percent = (
             text.split("/")[-1]
             .replace("(", "")
@@ -239,7 +239,7 @@ class MossService:
         return {"name": " ".join(name), "percent": int(percent)}
 
     def getStudentDirectory(self, text):
-        directory = "/".join(text.split("/")[:-1])
+        directory = "/".join(text.split("/")[:4])
         directory = (
             " ".join(directory.split("_")[:-4])
             + "_"
@@ -290,7 +290,7 @@ class MossService:
         return True
 
     def uploadReportFile(self, file):
-        print("subiendo", file[0])
+        print("Uploading:", file[0])
         try:
             self.s3_client.upload_file(file[0], "moss-utfsm", file[1])
         except ClientError as e:
