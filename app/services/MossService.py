@@ -292,7 +292,7 @@ class MossService:
     def uploadReportFile(self, file):
         print("Uploading:", file[0])
         try:
-            self.s3_client.upload_file(file[0], "moss-utfsm", file[1])
+            self.s3_client.upload_file(file[0], getenv("BUCKET"), file[1])
         except ClientError as e:
             print(e)
 
