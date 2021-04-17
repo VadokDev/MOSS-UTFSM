@@ -14,6 +14,8 @@ class StudentService:
         students = {}
 
         for fileName in getFileNames(self.dbPath):
+            if fileName.startswith('.'):
+                continue
             section = getFileNameSection(fileName)
             file = ExcelFile(path.join(self.dbPath, fileName))
             for (
