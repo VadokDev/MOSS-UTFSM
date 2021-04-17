@@ -106,38 +106,45 @@ class MossService:
             s.send(f.read(size))
 
     def send(self):
-        s = Socket()
-        s.connect((self.server, self.port))
+        try:
+            print("Submmiting files to MOSS")
+            s = Socket()
+            s.settimeout(5*60)
+            s.connect((self.server, self.port))
+            
 
-        s.send("moss {}\n".format(self.user_id).encode())
-        s.send("directory {}\n".format(self.options["d"]).encode())
-        s.send("X {}\n".format(self.options["x"]).encode())
-        s.send("maxmatches {}\n".format(self.options["m"]).encode())
-        s.send("show {}\n".format(self.options["n"]).encode())
+            s.send("moss {}\n".format(self.user_id).encode())
+            s.send("directory {}\n".format(self.options["d"]).encode())
+            s.send("X {}\n".format(self.options["x"]).encode())
+            s.send("maxmatches {}\n".format(self.options["m"]).encode())
+            s.send("show {}\n".format(self.options["n"]).encode())
 
-        s.send("language {}\n".format(self.options["l"]).encode())
-        recv = s.recv(1024)
-        if recv == "no":
+            s.send("language {}\n".format(self.options["l"]).encode())
+            recv = s.recv(1024)
+            if recv == "no":
+                s.send(b"end\n")
+                s.close()
+                raise Exception("send() => Language not accepted by server")
+
+            for file_path, display_name in self.base_files:
+                self.uploadFile(s, file_path, display_name, 0)
+
+            index = 1
+            for file_path, display_name in self.files:
+                self.uploadFile(s, file_path, display_name, index)
+                index += 1
+
+            s.send("query 0 {}\n".format(self.options["c"]).encode())
+
+            response = s.recv(1024)
+
             s.send(b"end\n")
             s.close()
-            raise Exception("send() => Language not accepted by server")
 
-        for file_path, display_name in self.base_files:
-            self.uploadFile(s, file_path, display_name, 0)
-
-        index = 1
-        for file_path, display_name in self.files:
-            self.uploadFile(s, file_path, display_name, index)
-            index += 1
-
-        s.send("query 0 {}\n".format(self.options["c"]).encode())
-
-        response = s.recv(1024)
-
-        s.send(b"end\n")
-        s.close()
-
-        return response.decode().replace("\n", "")
+            return response.decode().replace("\n", "")
+        except OSError as e:
+            print("5m timeout, retrying")
+            return self.send()
 
     def saveWebPage(self, url, path):
         if len(url) == 0:
