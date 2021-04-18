@@ -16,7 +16,11 @@ class CheckPlagiarismInMoss:
         reportFolder = self.homeworkService.getResultsFolder()
         reportUuid = str(uuid4())
         reportWebFolder = self.homeworkService.getWebResultsFolder(reportUuid)
+        print("Sending homeworks to MOSS")
+
         reportUrl = self.mossService.send()
+
+        print("Reporte MOSS:", reportUrl)
         self.mossService.download_report(
             reportUrl,
             reportWebFolder,

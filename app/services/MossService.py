@@ -109,9 +109,8 @@ class MossService:
         try:
             print("Submmiting files to MOSS")
             s = Socket()
-            s.settimeout(5*60)
+            s.settimeout(5 * 60)
             s.connect((self.server, self.port))
-            
 
             s.send("moss {}\n".format(self.user_id).encode())
             s.send("directory {}\n".format(self.options["d"]).encode())
@@ -263,7 +262,7 @@ class MossService:
 
         for row in table.find_all("tr")[1:]:
             firstUrl, secondUrl, linesCount = row.find_all("td")
-            url = firstUrl.find_all(href=True)[0]['href']
+            url = firstUrl.find_all(href=True)[0]["href"]
             student1 = self.parseReportStudent(firstUrl.text)
             dirStudent1 = self.getStudentDirectory(firstUrl.text)
             student2 = self.parseReportStudent(secondUrl.text)
@@ -300,7 +299,6 @@ class MossService:
         print("Uploading:", file[0])
         try:
             self.s3_client.upload_file(file[0], getenv("BUCKET"), file[1])
-        except ClientError as e:
-            print(e)
-
+        except Exception as exc:
+            print(exc)
         return True
