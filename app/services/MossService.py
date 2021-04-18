@@ -107,7 +107,7 @@ class MossService:
 
     def send(self):
         try:
-            print("Submmiting files to MOSS")
+            print("Submitting files to MOSS")
             s = Socket()
             s.settimeout(5 * 60)
             s.connect((self.server, self.port))
