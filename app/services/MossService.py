@@ -142,7 +142,8 @@ class MossService:
 
             return response.decode().replace("\n", "")
         except OSError as e:
-            print("5m timeout, retrying")
+            print("A problem was detected while sending to MOSS, retrying")
+            print(e)
             return self.send()
 
     def saveWebPage(self, url, path):
