@@ -6,7 +6,7 @@ from multiprocessing.pool import ThreadPool
 import boto3
 from botocore.exceptions import ClientError
 from app.utils.FileUtils import getFileNames
-
+import time
 try:
     from urllib.request import urlopen
 except ImportError:
@@ -144,6 +144,7 @@ class MossService:
         except OSError as e:
             print("A problem was detected while sending to MOSS, retrying")
             print(e)
+            time.sleep(60)
             return self.send()
 
     def saveWebPage(self, url, path):
