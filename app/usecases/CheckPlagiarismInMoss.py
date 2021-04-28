@@ -16,8 +16,6 @@ class CheckPlagiarismInMoss:
         reportFolder = self.homeworkService.getResultsFolder()
         reportUuid = str(uuid4())
         reportWebFolder = self.homeworkService.getWebResultsFolder(reportUuid)
-        print("Sending homeworks to MOSS")
-
         reportUrl = self.mossService.send()
 
         print("Reporte MOSS:", reportUrl)
@@ -44,7 +42,9 @@ class CheckPlagiarismInMoss:
             section = "inter"
             if student1["section"] == student2["section"]:
                 section = student1["section"]
-            elif student1["section"] == "not found" or student2["section"] == "not found":
+            elif (
+                student1["section"] == "not found" or student2["section"] == "not found"
+            ):
                 section = "not found"
 
             if section not in results:
