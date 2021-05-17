@@ -7,7 +7,7 @@ class CheckPlagiarismInMoss:
         self.mossService = mossService
         self.studentService = studentService
 
-    def start(self, sPercent, homeworkName):
+    def start(self, sPercent, homeworkName, reportUrl=False):
         self.homeworkService.decompressAll()
         students = self.studentService.getAll()
         for homework in self.homeworkService.getAll():
@@ -16,9 +16,9 @@ class CheckPlagiarismInMoss:
         reportFolder = self.homeworkService.getResultsFolder()
         reportUuid = str(uuid4())
         reportWebFolder = self.homeworkService.getWebResultsFolder(reportUuid)
-        print("Sending homeworks to MOSS")
 
-        reportUrl = self.mossService.send()
+        if not reportUrl:
+            reportUrl = self.mossService.send()
 
         print("Reporte MOSS:", reportUrl)
         self.mossService.download_report(
