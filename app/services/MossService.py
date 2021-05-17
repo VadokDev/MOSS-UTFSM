@@ -46,6 +46,7 @@ class MossService:
 
     def __init__(self, language="python"):
         self.user_id = getenv("MOSS_ID")
+        self.bucket = getenv("BUCKET")
         self.options = {"l": "python", "m": 100, "d": 1, "x": 0, "c": "", "n": 150}
         self.base_files = []
         self.files = []
@@ -107,7 +108,7 @@ class MossService:
 
     def send(self):
         try:
-            print("Submitting files to MOSS")
+            print("Submmiting files to MOSS")
             s = Socket()
             s.settimeout(5 * 60)
             s.connect((self.server, self.port))
@@ -300,7 +301,7 @@ class MossService:
     def uploadReportFile(self, file):
         print("Uploading:", file[0])
         try:
-            self.s3_client.upload_file(file[0], getenv("BUCKET"), file[1])
+            self.s3_client.upload_file(file[0], self.bucket, file[1])
         except Exception as exc:
-            print(exc)
+            print("Error Uploading:", file[0], "msg:", exc)
         return True

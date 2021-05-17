@@ -69,21 +69,24 @@ class HomeworkService:
                     folderName = (
                         result["student1"]["name"] + " - " + result["student2"]["name"]
                     )
-                resultFolder = path.join(sectionFolder, folderName)
+                resultFolder = path.join(sectionFolder, folderName).replace(" .", "")
+
                 if not path.exists(resultFolder):
                     makedirs(resultFolder)
 
                 folder1 = path.join(
                     resultFolder,
                     result["student1"]["section"] + " " + result["student1"]["name"],
-                )
+                ).replace(" .", "")
+
                 if not path.exists(folder1):
                     makedirs(folder1)
 
                 folder2 = path.join(
                     resultFolder,
                     result["student2"]["section"] + " " + result["student2"]["name"],
-                )
+                ).replace(" .", "")
+                
                 if not path.exists(folder2):
                     makedirs(folder2)
 
