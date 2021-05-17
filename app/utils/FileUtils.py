@@ -1,5 +1,6 @@
 from os import listdir, path
 from shutil import copytree, copy2
+import unicodedata
 
 
 def sanitize(word):
@@ -23,10 +24,14 @@ def getFileNameSection(fileName):
 
 
 def copyEntireFolder(src, dst, symlinks=False, ignore=None):
-    for item in listdir(src):
-        s = path.join(src, item)
-        d = path.join(dst, item)
-        if path.isdir(s):
-            copytree(s, d, symlinks, ignore)
-        else:
-            copy2(s, d)
+    try:
+        for item in listdir(src):
+
+            s = path.join(src, item)
+            d = path.join(dst, item)
+            if path.isdir(s):
+                copytree(s, d, symlinks, ignore)
+            else:
+                copy2(s, d)
+    except Exception as e:
+        print(e)
