@@ -11,12 +11,16 @@ load_dotenv()
 
 if len(sys.argv) < 5:
     print(
-        "Usage: python main.py [Language] [CourseFolder] [Homework] [SimilarityPercent]"
+        "Usage: python main.py [Language] [CourseFolder] [Homework] [SimilarityPercent] [MOSS_URL|'']"
     )
     print("Example: python main.py python CSJ-IWI131-2021-01 T1 60")
     exit()
 
-_, language, courseFolder, homework, sPercent = sys.argv
+if len(sys.argv) < 6:
+    _, language, courseFolder, homework, sPercent = sys.argv
+    url = False
+else:
+    _, language, courseFolder, homework, sPercent, url = sys.argv
 mossService = MossService(language)
 studentService = StudentService(courseFolder)
 homeworkService = HomeworkService(courseFolder, homework)
@@ -24,4 +28,4 @@ homeworkService = HomeworkService(courseFolder, homework)
 checkPlagiarismInMoss = CheckPlagiarismInMoss(
     homeworkService, mossService, studentService
 )
-checkPlagiarismInMoss.start(int(sPercent), homework)
+checkPlagiarismInMoss.start(int(sPercent), homework, url)
