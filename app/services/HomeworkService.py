@@ -38,11 +38,11 @@ class HomeworkService:
         if filePath.endswith(".zip"):
             with ZipFile(filePath, "r") as zipObj:
                 zipObj.extractall(path=directory)
-        elif filePath.endswith("tar.gz"):
+        elif filePath.endswith(".tar.gz"):
             tar = TarFile(filePath, "r:gz")
             tar.extractall(path=directory)
             tar.close()
-        elif filePath.endswith("tar"):
+        elif filePath.endswith(".tar"):
             tar = TarFile(filePath, "r:")
             tar.extractall(path=directory)
             tar.close()
