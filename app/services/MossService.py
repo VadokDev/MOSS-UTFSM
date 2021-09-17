@@ -145,7 +145,7 @@ class MossService:
         except OSError as e:
             print("A problem was detected while sending to MOSS, retrying")
             print(e)
-            time.sleep(60)
+            time.sleep(10 * 60)
             return self.send()
 
     def saveWebPage(self, url, path):
