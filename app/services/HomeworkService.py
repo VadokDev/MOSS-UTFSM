@@ -37,7 +37,10 @@ class HomeworkService:
         filePath = path.join(directory, fileName)
         if filePath.endswith(".zip"):
             with ZipFile(filePath, "r") as zipObj:
-                zipObj.extractall(path=directory)
+                zipinfo = zipObj.infolist()
+                for member in zipinfo:
+                    member.filename = str(bytes(member.filename,'utf-8').decode('utf-8','ignore').encode('utf-8'))
+                    zipObj.extract(member, directory)
         elif filePath.endswith(".tar.gz"):
             tar = TarFile(filePath, "r:gz")
             tar.extractall(path=directory)
